@@ -25,6 +25,12 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -41,6 +47,10 @@ userSchema.pre("save", async function savePassword() {
 });
 
 userSchema.methods.matchPassword = function matchPassword(enteredPassword) {
+  if (!this.password) {
+    return false;
+  }
+
   return bcrypt.compare(enteredPassword, this.password);
 };
 

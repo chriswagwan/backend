@@ -15,15 +15,18 @@ const messageSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
+      required: true,
       trim: true,
     },
     subject: {
       type: String,
+      required: true,
       trim: true,
     },
     message: {
       type: String,
       required: true,
+      trim: true,
     },
     isRead: {
       type: Boolean,

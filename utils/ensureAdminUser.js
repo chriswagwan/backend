@@ -5,7 +5,7 @@ const ensureAdminUser = async () => {
   const adminPassword = process.env.ADMIN_PASSWORD || "Admin123!";
   const adminName = process.env.ADMIN_NAME || "Admin User";
 
-  const existingAdmin = await User.findOne({ email: adminEmail.toLowerCase() });
+  const existingAdmin = await User.findOne({ role: "admin" });
 
   if (existingAdmin) {
     return;
