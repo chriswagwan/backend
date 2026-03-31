@@ -16,6 +16,8 @@ const router = express.Router();
 const staffValidation = [
   body("name").trim().notEmpty().withMessage("Staff name is required"),
   body("title").trim().notEmpty().withMessage("Staff title is required"),
+  body("email").optional({ checkFalsy: true }).isEmail().withMessage("Enter a valid email address"),
+  body("phone").optional({ checkFalsy: true }).trim(),
   body("description").trim().notEmpty().withMessage("Staff description is required"),
 ];
 

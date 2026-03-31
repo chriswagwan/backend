@@ -32,6 +32,8 @@ const createStaff = asyncHandler(async (req, res) => {
   const staff = await Staff.create({
     name: req.body.name,
     title: req.body.title,
+    email: req.body.email || "",
+    phone: req.body.phone || "",
     description: req.body.description,
     photo,
   });
@@ -49,6 +51,8 @@ const updateStaff = asyncHandler(async (req, res) => {
 
   staff.name = req.body.name ?? staff.name;
   staff.title = req.body.title ?? staff.title;
+  staff.email = req.body.email ?? staff.email;
+  staff.phone = req.body.phone ?? staff.phone;
   staff.description = req.body.description ?? staff.description;
 
   if (req.file) {
