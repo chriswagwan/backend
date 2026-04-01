@@ -17,7 +17,7 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 dotenv.config();
 
 const app = express();
-const allowedOrigin = process.env.CLIENT_URL || "http://localhost:5173";
+const allowedOrigin = process.env.CLIENT_URL || "https://iremecivil.vercel.app";
 
 app.use(
   cors({
