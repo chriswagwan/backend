@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
@@ -16,26 +17,29 @@ const staffRoutes = require("./routes/staffRoutes");
 const slideshowRoutes = require("./routes/slideshowRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled Rejection:", reason);
-});
-
-process.on("uncaughtException", (error) => {
-  console.error("Uncaught Exception:", error);
-});
-
 const app = express();
-const allowedOrigin = process.env.CLIENT_URL || "https://iremecivil.vercel.app";
+
+const allowedOrigins = [
+  "https://iremecivil.vercel.app",
+  "https://iremecivil-fke64cvp1-chriswagwans-projects.vercel.app",
+];
 
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/api/health", (req, res) => {
   res.json({
