@@ -8,6 +8,7 @@ const {
   verifyResetToken,
   resetPassword,
   getProfile,
+  verifyAdminKey,
 } = require("../controllers/authController");
 const { protect, authorize } = require("../middleware/authMiddleware");
 const validateRequest = require("../middleware/validateRequest");
@@ -89,5 +90,12 @@ router.post(
 );
 
 router.get("/profile", protect, getProfile);
+
+router.post(
+  "/verify-admin-key",
+  [body("key").trim().notEmpty().withMessage("Access key is required")],
+  validateRequest,
+  verifyAdminKey
+);
 
 module.exports = router;

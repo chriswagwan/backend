@@ -1,10 +1,9 @@
-const path = require("path");
 const Staff = require("../models/Staff");
 const asyncHandler = require("../utils/asyncHandler");
 
 const getPhotoUrl = (req, file) => {
   if (!file) return null;
-  return `${req.protocol}://${req.get("host")}/uploads/${path.basename(file.path)}`;
+  return file.path;
 };
 
 const getStaff = asyncHandler(async (req, res) => {

@@ -6,6 +6,7 @@ const {
   markMessageAsRead,
 } = require("../controllers/messageController");
 const { protect, authorize } = require("../middleware/authMiddleware");
+const validateObjectId = require("../middleware/validateObjectId");
 const validateRequest = require("../middleware/validateRequest");
 
 const router = express.Router();
@@ -55,6 +56,6 @@ router.post(
 );
 
 router.get("/", protect, authorize("admin"), getMessages);
-router.patch("/:id/read", protect, authorize("admin"), markMessageAsRead);
+router.patch("/:id/read", protect, authorize("admin"), validateObjectId(), markMessageAsRead);
 
 module.exports = router;

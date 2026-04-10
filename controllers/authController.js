@@ -4,7 +4,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const generateToken = require("../utils/generateToken");
 
 const RESET_TOKEN_EXPIRY_MS = 60 * 60 * 1000;
-const CLIENT_URL = (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
+const getClientUrl = () => (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
 
 const normalizeEmail = (email) => email.trim().toLowerCase();
 
@@ -18,7 +18,7 @@ const buildAuthResponse = (user) => ({
 
 const buildResetTokenHash = (token) => crypto.createHash("sha256").update(token).digest("hex");
 
-const buildResetLink = (token) => `${CLIENT_URL}/reset-password/${token}`;
+const buildResetLink = (token) => `${getClientUrl()}/reset-password/${token}`;
 
 const issueResetTokenForUser = async (user) => {
   const rawToken = crypto.randomBytes(32).toString("hex");
@@ -170,6 +170,30 @@ const getProfile = asyncHandler(async (req, res) => {
   res.json(req.user);
 });
 
+const verifyAdminKey = asyncHandler(async (req, res) => {
+  const { key } = req.body;
+
+  if (!key) {
+    res.status(400);
+    throw new Error("Access key is required");
+  }
+
+  const adminSecretKey = process.env.ADMIN_SECRET_KEY;
+
+  if (!adminSecretKey) {
+    console.error("ADMIN_SECRET_KEY is not configured");
+    res.status(500);
+    throw new Error("Admin access is not configured");
+  }
+
+  if (key === adminSecretKey) {
+    res.json({ success: true });
+  } else {
+    res.status(401);
+    throw new Error("Invalid access key");
+  }
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -178,4 +202,5 @@ module.exports = {
   verifyResetToken,
   resetPassword,
   getProfile,
+  verifyAdminKey,
 };

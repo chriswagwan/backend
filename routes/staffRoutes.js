@@ -8,7 +8,8 @@ const {
   deleteStaff,
 } = require("../controllers/staffController");
 const { protect, authorize } = require("../middleware/authMiddleware");
-const upload = require("../middleware/uploadMiddleware");
+const upload = require("../middleware/upload");
+const validateObjectId = require("../middleware/validateObjectId");
 const validateRequest = require("../middleware/validateRequest");
 
 const router = express.Router();
@@ -22,7 +23,7 @@ const staffValidation = [
 ];
 
 router.get("/", getStaff);
-router.get("/:id", getStaffById);
+router.get("/:id", validateObjectId(), getStaffById);
 router.post(
   "/",
   protect,
@@ -36,11 +37,12 @@ router.put(
   "/:id",
   protect,
   authorize("admin"),
+  validateObjectId(),
   upload.single("photo"),
   staffValidation,
   validateRequest,
   updateStaff
 );
-router.delete("/:id", protect, authorize("admin"), deleteStaff);
+router.delete("/:id", protect, authorize("admin"), validateObjectId(), deleteStaff);
 
 module.exports = router;

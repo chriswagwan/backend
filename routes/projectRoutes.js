@@ -8,7 +8,8 @@ const {
   deleteProject,
 } = require("../controllers/projectController");
 const { protect, authorize } = require("../middleware/authMiddleware");
-const upload = require("../middleware/uploadMiddleware");
+const upload = require("../middleware/upload");
+const validateObjectId = require("../middleware/validateObjectId");
 const validateRequest = require("../middleware/validateRequest");
 
 const router = express.Router();
@@ -23,7 +24,7 @@ const projectValidation = [
 ];
 
 router.get("/", getProjects);
-router.get("/:id", getProjectById);
+router.get("/:id", validateObjectId(), getProjectById);
 router.post(
   "/",
   protect,
@@ -37,11 +38,12 @@ router.put(
   "/:id",
   protect,
   authorize("admin"),
+  validateObjectId(),
   upload.array("images", 4),
   projectValidation,
   validateRequest,
   updateProject
 );
-router.delete("/:id", protect, authorize("admin"), deleteProject);
+router.delete("/:id", protect, authorize("admin"), validateObjectId(), deleteProject);
 
 module.exports = router;

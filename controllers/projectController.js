@@ -1,10 +1,8 @@
-const path = require("path");
 const Project = require("../models/Project");
 const asyncHandler = require("../utils/asyncHandler");
 
 const normalizeImages = (req, bodyImages = []) => {
-  const uploadedImages =
-    req.files?.map((file) => `${req.protocol}://${req.get("host")}/uploads/${path.basename(file.path)}`) || [];
+  const uploadedImages = req.files?.map((file) => file.path) || [];
 
   if (!bodyImages?.length) {
     return uploadedImages;
