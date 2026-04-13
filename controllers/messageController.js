@@ -27,8 +27,19 @@ const markMessageAsRead = asyncHandler(async (req, res) => {
   res.json(updatedMessage);
 });
 
+const deleteMessage = asyncHandler(async (req, res) => {
+  const message = await Message.findById(req.params.id);
+  if (!message) {
+    res.status(404);
+    throw new Error("Message not found");
+  }
+  await message.deleteOne();
+  res.json({ message: "Message deleted" });
+});
+
 module.exports = {
   createMessage,
   getMessages,
   markMessageAsRead,
+  deleteMessage,
 };

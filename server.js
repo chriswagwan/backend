@@ -22,6 +22,7 @@ const app = express();
 const allowedOrigins = [
   "https://iremecivil.vercel.app",
   "https://iremecivil-fke64cvp1-chriswagwans-projects.vercel.app",
+  
 ];
 
 app.use(

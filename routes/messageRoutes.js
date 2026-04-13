@@ -4,6 +4,7 @@ const {
   createMessage,
   getMessages,
   markMessageAsRead,
+  deleteMessage,
 } = require("../controllers/messageController");
 const { protect, authorize } = require("../middleware/authMiddleware");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -56,6 +57,8 @@ router.post(
 );
 
 router.get("/", protect, authorize("admin"), getMessages);
+
 router.patch("/:id/read", protect, authorize("admin"), validateObjectId(), markMessageAsRead);
+router.delete("/:id", protect, authorize("admin"), validateObjectId(), deleteMessage);
 
 module.exports = router;
